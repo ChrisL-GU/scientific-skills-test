@@ -1,0 +1,198 @@
+# Multi-Omics Analysis Pipeline Configuration
+# Customize these parameters for your analysis
+
+# Project Settings
+project:
+  name: "Infection/Immune Response Biomarker Study"
+  description: "Multi-omics analysis pipeline for infection studies"
+  output_dir: "results"
+  data_dir: "data/raw"
+
+# RNA-seq Analysis
+rnaseq:
+  # Significance thresholds
+  padj_threshold: 0.05
+  log2fc_threshold: 1.0
+
+  # Data generation (set to null to use your own data)
+  generate_example_data: true
+  n_genes: 5000
+  n_samples: 24
+
+  # Analysis parameters
+  refit_cooks: true
+  n_cpus: 1
+
+# Proteomics Analysis
+proteomics:
+  padj_threshold: 0.05
+  log2fc_threshold: 0.5
+  generate_example_data: true
+  n_proteins: 2000
+  n_samples: 24
+
+# Metabolomics Analysis
+metabolomics:
+  padj_threshold: 0.05
+  log2fc_threshold: 0.5
+  generate_example_data: true
+  n_metabolites: 500
+  n_samples: 24
+
+  # Database integration
+  fetch_hmdb: true
+  metabolomics_workbench: true
+
+# Pathway Analysis
+pathways:
+  databases:
+    - kegg
+    - uniprot
+
+  # Network parameters
+  min_interactions: 1
+  confidence_threshold: 0.4
+
+# Protein-Protein Interactions
+interactions:
+  database: "string"
+  species: "9606"  # Homo sapiens
+  score_threshold: 0.4
+
+  # Network visualization
+  layout_algorithm: "spring"  # spring, circular, hierarchical
+  node_size_by: "degree"      # degree, betweenness, closeness
+
+# Multi-Omics Integration
+integration:
+  # Correlation parameters
+  correlation_method: "pearson"  # pearson, spearman, kendall
+  p_value_threshold: 0.05
+
+  # ANOVA parameters
+  alpha: 0.05
+
+  # Pathway summary
+  aggregate_by: "pathway"
+
+# Predictive Modeling
+prediction:
+  # Train/test split
+  test_size: 0.2
+  random_state: 42
+
+  # Models to train
+  models:
+    - logistic_regression
+    - random_forest
+    - gradient_boosting
+
+  # Hyperparameters
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 5
+
+  gradient_boosting:
+    n_estimators: 100
+    learning_rate: 0.1
+    max_depth: 3
+
+  logistic_regression:
+    max_iter: 1000
+    penalty: "l2"
+
+# Clinical Trials Search
+clinical_trials:
+  condition: "Infection"
+  status: "All"  # All, Recruiting, Active, Completed
+  phase: "All"   # All, 1, 2, 3, 4
+
+  # API parameters
+  timeout: 30
+  max_results: 100
+
+# Visualization
+visualization:
+  # Plot parameters
+  dpi: 300
+  figure_format: "png"  # png, pdf, svg
+  theme: "seaborn"
+
+  # Color schemes
+  colors:
+    upregulated: "#FF6B6B"
+    downregulated: "#4ECDC4"
+    significant: "#FF6B6B"
+    nonsignificant: "#95A5A6"
+
+  # Figure sizes
+  fig_size_small: [8, 6]
+  fig_size_medium: [12, 8]
+  fig_size_large: [14, 10]
+
+# Statistical Testing
+statistics:
+  # Multiple testing correction
+  correction_method: "benjamini-hochberg"  # bonferroni, benjamini-hochberg, hochberg
+
+  # Normalization
+  normalize_expression: true
+  normalization_method: "log2"  # log2, vst, deseq2_rlog
+
+  # Outlier detection
+  detect_outliers: true
+  outlier_method: "zscore"  # zscore, iqr, isolation_forest
+
+# Data Quality
+quality_control:
+  # Filtering
+  min_expression: 0  # Minimum count/intensity
+  max_missing: 0.3   # Maximum missing values allowed (0-1)
+  min_variance: 0.1  # Minimum variance percentile
+
+  # Normalization
+  normalize_batch_effects: false
+  batch_correction_method: "combat"  # combat, harmony
+
+# Logging and Reporting
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_file: "logs/analysis.log"
+  verbose: true
+
+  # Report generation
+  generate_html_report: true
+  generate_pdf_report: false
+  include_plots: true
+
+# System
+system:
+  n_jobs: -1  # -1 uses all available cores
+  random_seed: 42
+  memory_limit_gb: null  # null = no limit
+  temp_dir: ".tmp"
+
+# Database Access
+databases:
+  kegg:
+    enabled: true
+    api_url: "https://rest.kegg.jp"
+    timeout: 30
+
+  uniprot:
+    enabled: true
+    api_url: "https://www.uniprot.org/uploadlists/"
+
+  string:
+    enabled: true
+    api_url: "https://string-db.org/api"
+    version: "11.5"
+
+  hmdb:
+    enabled: true
+    api_url: "https://hmdb.ca/metabolites"
+
+  clinicaltrials:
+    enabled: true
+    api_url: "https://clinicaltrials.gov/api/query"
